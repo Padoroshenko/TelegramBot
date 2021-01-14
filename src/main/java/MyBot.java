@@ -3,7 +3,11 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MyBot extends TelegramLongPollingBot {
+    String [] commands = new String[] {"/start","/date","/time"};
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -12,8 +16,21 @@ public class MyBot extends TelegramLongPollingBot {
             // Set variables
             String message_text = update.getMessage().getText();
             long chat_id = update.getMessage().getChatId();
-            if (update.getMessage().getText().equals("/start"))
-                message_text = "Приветствую тебя "+update.getMessage().getChat().getUserName();
+            if (update.getMessage().getText().equals("/start")) {
+
+                message_text = "Приветствую тебя " + update.getMessage().getChat().getUserName() + "!" + "\n" + "Пока что я знаю только эти функции: \n";
+                for(int i=0; i<commands.length;i++){
+                    message_text+=commands[i]+"\n";
+                }
+            }
+            if (update.getMessage().getText().equals("/date")) {
+                String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date());
+                message_text = "Текущая дата: " + date;
+            }
+            if (update.getMessage().getText().equals("/time")) {
+                String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                message_text = "Текущее время: " + time;
+            }
             System.out.println("GOT message:"+chat_id+" "+update.getMessage());
             SendMessage message = new SendMessage() // Create a message object object
                     .setChatId(chat_id)
@@ -29,12 +46,12 @@ public class MyBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         // Return bot username
-        return "JavaTest_bot";
+        return "SuperPuperMegapuperBot";
     }
 
     @Override
     public String getBotToken() {
         // Return bot token from BotFather
-        return "1414378761:AAEdGyMNGvqPLO1787kXYFdZPlHWImw8B0E";
+        return "1580071678:AAEpakMf_yxctUtNSHUCarpNk7Hv4vGOYro";
     }
 }
