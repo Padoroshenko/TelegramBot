@@ -2,7 +2,9 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -16,6 +18,10 @@ import java.util.List;
 
 public class MyBot extends TelegramLongPollingBot {
     String [] commands = new String[] {"/start","/date","/time","/buttons"};
+
+    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+
+
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -24,6 +30,7 @@ public class MyBot extends TelegramLongPollingBot {
             // Set variables
             String message_text = update.getMessage().getText();
             long chat_id = update.getMessage().getChatId();
+
 
             if (update.getMessage().getText().equals("/start")) {
 
@@ -55,6 +62,21 @@ public class MyBot extends TelegramLongPollingBot {
                 SendMessage message = new SendMessage() // Create a message object object
                         .setChatId(chat_id)
                         .setText(message_text);
+                message.setReplyMarkup(replyKeyboardMarkup);
+                replyKeyboardMarkup.setSelective(true);
+                replyKeyboardMarkup.setResizeKeyboard(true);
+                replyKeyboardMarkup.setOneTimeKeyboard(false);
+                ArrayList<KeyboardRow> keyboard = new ArrayList<>();
+                KeyboardRow keyboardFirstRow = new KeyboardRow();
+                KeyboardRow keyboardSecondRow = new KeyboardRow();
+
+                keyboardFirstRow.add("1");
+                keyboardFirstRow.add("2");
+                keyboardSecondRow.add("1");
+                keyboard.add(keyboardFirstRow);
+                keyboard.add(keyboardSecondRow);
+                replyKeyboardMarkup.setKeyboard(keyboard);
+
                 try {
                     execute(message); // Sending our message object to user
                 } catch (TelegramApiException e) {
